@@ -3,10 +3,10 @@
 ## Info
 Pact is a presidential action tracker.
 
-It returns the 10 most recent presidential actions.
+It returns recent presidential actions, sourced from [the White House](https://www.whitehouse.gov/presidential-actions).
 
 **Screenshots!!**
-![Screenshot]()
+![Screenshot](https://github.com/user-attachments/assets/58f287bd-01c1-451f-8fb3-e145154aec7d)
 
 ## Install
 This script does it all for you.
