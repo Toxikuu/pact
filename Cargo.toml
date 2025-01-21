@@ -1,9 +1,11 @@
 [package]
 name = "pact"
-version = "0.1.0"
+version = "0.2.0" # args, rayon, pages
 edition = "2024"
 
 [dependencies]
 anyhow = "1.0.95"
+clap = { version = "4.5.27", features = ["derive"] }
 html-escape = "0.2.13"
+rayon = "1.10.0"
 ureq = "2.12.1"
