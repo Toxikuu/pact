@@ -1,0 +1,9 @@
+[package]
+name = "pact"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.95"
+html-escape = "0.2.13"
+ureq = "2.12.1"
