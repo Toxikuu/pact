@@ -12,7 +12,7 @@ It returns recent presidential actions, sourced from [the White House](https://w
 This script does it all for you.
 
 ```bash
-sudo bash <(curl -fsSL 'https://github.com/Toxikuu/pact/raw/refs/heads/master/install.sh')
+curl -fsSL 'https://github.com/Toxikuu/pact/raw/refs/heads/master/install.sh' -o /tmp/pact-install.sh && sudo bash /tmp/pact-install.sh && rm -vf /tmp/pact-install.sh
 ```
 
 Once your curiosity has been sated, `sudo rm -vf /usr/bin/pact`.
