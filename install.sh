@@ -6,3 +6,4 @@ chmod +x pact
 
 echo -e '\x1b[34;1mInstalling...\x1b[0m'
 sudo mv -vi pact /usr/bin/pact
+echo -e '\x1b[34;1mDone!\x1b[0m'
