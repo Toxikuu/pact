@@ -1,6 +1,6 @@
 [package]
 name = "pact"
-version = "0.2.0" # args, rayon, pages
+version = "0.3.0" # updated to ureq 3
 edition = "2024"
 
 [dependencies]
@@ -8,4 +8,4 @@ anyhow = "1.0.95"
 clap = { version = "4.5.27", features = ["derive"] }
 html-escape = "0.2.13"
 rayon = "1.10.0"
-ureq = "2.12.1"
+ureq = "3.0.5"
