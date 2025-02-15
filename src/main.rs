@@ -1,7 +1,7 @@
 use anyhow::Result;
 use html_escape::decode_html_entities;
 use rayon::{ThreadPoolBuilder, prelude::*};
-use std::sync::{Arc, Mutex};
+use std::{io::Read, sync::{Arc, Mutex}};
 
 mod args;
 
@@ -33,7 +33,12 @@ fn init() -> args::Args {
 
 fn curl(url: &str) -> Result<String> {
     let r = ureq::get(url).call()?;
-    Ok(r.into_string()?)
+
+    let mut reader = r.into_body().into_reader();
+    let mut buf = Vec::new();
+    reader.read_to_end(&mut buf)?;
+
+    Ok( String::from_utf8_lossy(&buf).to_string() )
 }
 
 #[derive(Debug, Clone)]
