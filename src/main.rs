@@ -1,7 +1,10 @@
 use anyhow::Result;
 use html_escape::decode_html_entities;
 use rayon::{ThreadPoolBuilder, prelude::*};
-use std::{io::Read, sync::{Arc, Mutex}};
+use std::{
+    io::Read,
+    sync::{Arc, Mutex},
+};
 
 mod args;
 
@@ -38,7 +41,7 @@ fn curl(url: &str) -> Result<String> {
     let mut buf = Vec::new();
     reader.read_to_end(&mut buf)?;
 
-    Ok( String::from_utf8_lossy(&buf).to_string() )
+    Ok(String::from_utf8_lossy(&buf).to_string())
 }
 
 #[derive(Debug, Clone)]
@@ -56,17 +59,21 @@ impl Action {
     }
 
     pub fn display(&self, i: usize) {
-        println!("
+        println!(
+            "
 \x1b[34;1m-{i} Presidential Action\x1b[0m
 \x1b[37mTitle: {}
-Link: {}\x1b[0m", self.title, self.link);
+Link: {}\x1b[0m",
+            self.title, self.link
+        );
     }
 }
 
 fn parse_contents(contents: &str) -> Vec<Action> {
-    let raw_actions: Vec<&str> = contents.lines().filter(|l| {
-        l.contains("wp-block-post-title has-heading-4-font-size")
-    }).collect(); 
+    let raw_actions: Vec<&str> = contents
+        .lines()
+        .filter(|l| l.contains("class=\"wp-block-post-title\"><a href="))
+        .collect();
 
     let mut actions: Vec<Action> = Vec::new();
 
@@ -75,8 +82,9 @@ fn parse_contents(contents: &str) -> Vec<Action> {
         let (title, _) = title_parts.get(2).unwrap().split_once('<').unwrap();
         let title = decode_html_entities(title);
 
-        let link_parts = a.splitn(5, '"').collect::<Vec<&str>>();
-        let link = link_parts.get(3).unwrap();
+        let iso1 = &a[a.find("href=\"").unwrap() + 6..];
+        dbg!(&a, &iso1);
+        let link = &iso1[..iso1.find("\"").unwrap()];
         let link = decode_html_entities(link);
 
         actions.push(Action::new(&title, &link))
@@ -90,8 +98,15 @@ fn get_total_pages(contents: &str) -> Result<u32> {
         l.contains(r#"<a data-wp-key="index-4" data-wp-on--click="core/query::actions.navigate" class="page-numbers" href="https://www.whitehouse.gov/presidential-actions/page/"#)
     }).collect::<Vec<_>>();
     let line = line.first().unwrap();
-    
-    let pages = line.chars().filter(|c| c.is_ascii_digit()).collect::<Vec<_>>().last().unwrap().to_digit(10).unwrap();
+
+    let pages = line
+        .chars()
+        .filter(|c| c.is_ascii_digit())
+        .collect::<Vec<_>>()
+        .last()
+        .unwrap()
+        .to_digit(10)
+        .unwrap();
     Ok(pages)
 }
 
@@ -103,14 +118,17 @@ fn get_num_actions(n: u32) -> Result<Vec<Action>> {
         panic!("Invalid value")
     }
 
-    let actions: Arc<Mutex<Vec<Action>>> = Arc::new(Mutex::new(vec![Action { title: String::new(), link: String::new() }; (n * 10) as usize]));
+    let actions: Arc<Mutex<Vec<Action>>> = Arc::new(Mutex::new(vec![
+        Action {
+            title: String::new(),
+            link: String::new()
+        };
+        (n * 10) as usize
+    ]));
 
-    let pool = ThreadPoolBuilder::new()
-        .num_threads(n as usize)
-        .build()?;
+    let pool = ThreadPoolBuilder::new().num_threads(n as usize).build()?;
 
     pool.install(|| {
-
         (1..=n).into_par_iter().for_each(|i| {
             let url = format!("{URL}page/{i}");
             let contents = curl(&url).expect("Failed to fetch url");
@@ -120,10 +138,9 @@ fn get_num_actions(n: u32) -> Result<Vec<Action>> {
 
             let start_index = (i - 1) as usize * 10;
             for (j, act) in acts.into_iter().enumerate() {
-                actions_lock[start_index + j] = act; 
+                actions_lock[start_index + j] = act;
             }
         });
-
     });
 
     Ok(actions.lock().unwrap().clone())
