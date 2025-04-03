@@ -1,4 +1,4 @@
-# pact
+# Pact
 
 ## Info
 Pact is a presidential action tracker.
