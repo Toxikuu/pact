@@ -5,6 +5,10 @@ Pact is a presidential action tracker.
 
 It returns recent presidential actions, sourced from [the White House](https://www.whitehouse.gov/presidential-actions).
 
+**WARNING**
+This currently doesn't work because the oval office really likes fucking with
+their website.
+
 **Screenshots!!**
 ![Screenshot](https://github.com/user-attachments/assets/58f287bd-01c1-451f-8fb3-e145154aec7d)
 
