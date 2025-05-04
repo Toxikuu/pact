@@ -1,6 +1,7 @@
 [package]
 name = "pact"
-version = "0.4.0" # adjusted to whitehouse.gov changes && updated dependencies
+authors = [ "Toxikuu" ]
+version = "0.4.1" # added a README warning, added myself as an author, updated dependencies
 edition = "2024"
 
 [dependencies]
